@@ -16,7 +16,7 @@ class ResultEGE(Base):
     __tablename__ = 'result_ege'
     id: Mapped[int] = mapped_column(primary_key = True)
     user_id: Mapped[int] = mapped_column(ForeignKey('user.id', ondelete='CASCADE'))
-    subject: Mapped[str_50]
+    subject: Mapped[str]
     result: Mapped[int] = mapped_column(CheckConstraint('result > 0'))
 
 
