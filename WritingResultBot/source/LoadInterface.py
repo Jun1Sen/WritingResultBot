@@ -1,4 +1,5 @@
 import json
+import sys
 
 def LoadInterface(sourceStrings):
     try:
@@ -8,3 +9,4 @@ def LoadInterface(sourceStrings):
     except FileNotFoundError:
         print(f"File {sourceStrings} not found. Error in LoadInterface() LangInterface.py")
 
+strings = LoadInterface("Strings.json")["interface"]["Content"]

@@ -7,7 +7,7 @@ from asyncio import run
 
 engine = create_async_engine(
     url = config.DB_URL_asyncpg(),
-    echo = True
+    echo = False
 )
 
 async_session_fabric = async_sessionmaker(bind=engine)
