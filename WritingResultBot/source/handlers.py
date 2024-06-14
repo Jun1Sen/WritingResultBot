@@ -68,7 +68,7 @@ def register_handlers():
             if message.text.isdigit():
                 score = int(message.text)
                 if score < 0 or score > 100:
-                    bot.send_message(message.chat.id, "Результат должен быть от 0 до 100.")
+                    await bot.send_message(message.chat.id, "Результат не записан. Результат должен быть от 0 до 100.")
                     return
 
                 subject = data.get('subject')
