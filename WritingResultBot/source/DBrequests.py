@@ -14,31 +14,50 @@ async def drop_tables():
         await conn.run_sync(Base.metadata.drop_all)
 
 
-async def check_existing_user(telegramID: int) -> bool:
-
+async def check_existing_user(telegramID: int) -> int:
     async with async_session_fabric() as session:
         query = (
             select(User.telegramId).select_from(User).filter(User.telegramId == telegramID)
         )
         res = await session.execute(query)
         result = res.scalars().first()
-        if result is None: return False
-        return True
+        if result is None: return -1
+        return result
 
 
-async def select_score_by_ID(telegramID: int) -> ResultEGE:
+async def get_user_id(telegramID: int) -> int:
     async with async_session_fabric() as session:
         query = (
-            select(User, ResultEGE)
+            select(User).select_from(User).filter(User.telegramId == telegramID)
+        )
+        res = await session.execute(query)
+        result = res.scalars().first().__dict__.get('id')
+        print(result)
+        if result is None: return -1
+        return result
+
+
+async def select_score_by_ID(telegramID: int) -> [dict]:
+    async with async_session_fabric() as session:
+        query = (
+            select(ResultEGE, User)
             .join(ResultEGE, User.id == ResultEGE.user_id)
             .filter(User.telegramId == telegramID)
         )
-        result = await session.execute(query)
-        user_profile = result.first()
-        return user_profile
+        print(query)
+        res = await session.execute(query)
+        objects = list(res.scalars().all())
+        results = []
+        for x in objects:
+            subject = x.__dict__.get('subject')
+            score = x.__dict__.get('result')
+            results.append({"subject": subject, "score": score})
+        return results
+
 
 async def insert_score(telegramID: int, subject: str, score: int) -> bool:
-    score = ResultEGE(user_id = telegramID, subject = subject, result = score)
+    userId = await get_user_id(telegramID)
+    score = ResultEGE(user_id=userId, subject=subject, result=score)
     async with async_session_fabric() as session:
         session.add_all([score])
         await session.commit()

@@ -20,3 +20,6 @@ class ResultEGE(Base):
     result: Mapped[int] = mapped_column(CheckConstraint('result > 0'))
 
 
+
+
+
