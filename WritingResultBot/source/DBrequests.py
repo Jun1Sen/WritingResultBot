@@ -14,15 +14,15 @@ async def drop_tables():
         await conn.run_sync(Base.metadata.drop_all)
 
 
-async def check_existing_user(telegramID: int) -> int:
+async def check_existing_user(telegramID: int) -> bool:
     async with async_session_fabric() as session:
         query = (
             select(User.telegramId).select_from(User).filter(User.telegramId == telegramID)
         )
         res = await session.execute(query)
         result = res.scalars().first()
-        if result is None: return -1
-        return result
+        if result is None: return False
+        return True
 
 
 async def get_user_id(telegramID: int) -> int:
