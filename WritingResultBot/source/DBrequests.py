@@ -4,6 +4,7 @@ from models import Base, User, ResultEGE
 from sqlalchemy import select
 
 
+
 async def create_tables():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
